@@ -156,7 +156,7 @@ class MCPStdio(MCPServer):
         tools = response.tools
         print(
             colored(
-                f"\nConnected to server with tools:{[tool.name for tool in tools]}",
+                f"\nConnected to server with tools:{[tool for tool in tools]}",
                 TraceColor.invocation_output,
             )
         )
