@@ -1,5 +1,4 @@
 import asyncio
-import json
 
 from InlineAgent.action_group import ActionGroup
 from InlineAgent.agent import InlineAgent
@@ -26,30 +25,30 @@ def handle_trace_event(event):
 
     trace = event["trace"]["trace"]["orchestrationTrace"]
 
-    # 「モデル入力」トレースの表示
-    if "modelInvocationInput" in trace:
-        input_trace = trace["modelInvocationInput"]["text"]
-        try:
-            print("入力")
-            print(json.loads(input_trace))
-        except json.JSONDecodeError:
-            print(input_trace)
+    # 「モデル入力」トレースの表示 (多分不要)
+    # if "modelInvocationInput" in trace:
+    #     input_trace = trace["modelInvocationInput"]["text"]
+    #     try:
+    #         print("入力")
+    #         print(json.loads(input_trace))
+    #     except json.JSONDecodeError:
+    #         print(input_trace)
 
-    # 「モデル出力」トレースの表示
-    if "modelInvocationOutput" in trace:
-        output_trace = trace["modelInvocationOutput"]["rawResponse"]["content"]
-        print("出力")
-        print(output_trace)
+    # 「モデル出力」トレースの表示（多分不要）
+    # if "modelInvocationOutput" in trace:
+    #     output_trace = trace["modelInvocationOutput"]["rawResponse"]["content"]
+    #     print("出力")
+    #     print(output_trace)
 
     # 「根拠」トレースの表示
     if "rationale" in trace:
-        print("根拠")
+        print("Thinking")
         print(trace["rationale"]["text"])
 
     # 「ツール呼び出し」トレースの表示
     if "invocationInput" in trace:
         # invocation_type = trace["invocationInput"]["type"]
-        print("ツール呼び出し")
+        print("Use Tool")
         print(trace["invocationInput"]["actionGroupInvocationInput"])
         # if invocation_type == "ACTION_GROUP":
         #     print(trace["invocationInput"]["actionGroupInvocationInput"])
@@ -81,7 +80,7 @@ print(agent.action_groups)
 # Step 4: Invoke agent
 async def main():
     agent_answer = ""
-    session_id = "112"
+    session_id = "112"  # TODO: uuidにしたほうが良いかも
     session_state = {}
 
     while not agent_answer:
