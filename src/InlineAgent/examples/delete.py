@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 from InlineAgent.action_group import ActionGroup
 from InlineAgent.agent import InlineAgent
@@ -28,20 +29,27 @@ def handle_trace_event(event):
     # 「モデル入力」トレースの表示
     if "modelInvocationInput" in trace:
         input_trace = trace["modelInvocationInput"]["text"]
-        print(input_trace)
+        try:
+            print("入力")
+            print(json.loads(input_trace))
+        except json.JSONDecodeError:
+            print(input_trace)
 
     # 「モデル出力」トレースの表示
     if "modelInvocationOutput" in trace:
         output_trace = trace["modelInvocationOutput"]["rawResponse"]["content"]
+        print("出力")
         print(output_trace)
 
     # 「根拠」トレースの表示
     if "rationale" in trace:
+        print("根拠")
         print(trace["rationale"]["text"])
 
     # 「ツール呼び出し」トレースの表示
     if "invocationInput" in trace:
         # invocation_type = trace["invocationInput"]["type"]
+        print("ツール呼び出し")
         print(trace["invocationInput"]["actionGroupInvocationInput"])
         # if invocation_type == "ACTION_GROUP":
         #     print(trace["invocationInput"]["actionGroupInvocationInput"])
@@ -50,7 +58,7 @@ def handle_trace_event(event):
 
     # 「観察」トレースの表示
     if "observation" in trace:
-        pass
+        print(trace["observation"]["type"])
 
 
 # Step 2: Logically group tools together
@@ -67,6 +75,7 @@ agent = InlineAgent(
     action_groups=[weather_action_group],
     agent_name="MockAgent",
 )
+print(agent.action_groups)
 
 
 # Step 4: Invoke agent
@@ -81,6 +90,7 @@ async def main():
             session_id=session_id,
             session_state=session_state,
             process_response=False,
+            # end_session=True,
         )
 
         event_stream = response["completion"]
@@ -98,7 +108,12 @@ async def main():
                     tool_map=agent.tool_map,
                 )
                 print("=== Session State ===")
-                print(session_state)
+                print("Return Control Result")
+                print(
+                    session_state["returnControlInvocationResults"][0][
+                        "functionResult"
+                    ]["responseBody"]["TEXT"]["body"]
+                )
                 print("========================")
             # Get Final Answer
             if "chunk" in event:
