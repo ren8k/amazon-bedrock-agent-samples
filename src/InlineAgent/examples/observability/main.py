@@ -1,14 +1,19 @@
 import uuid
+
 import boto3
 
-from InlineAgent.observability import ObservabilityConfig, observe
-from InlineAgent.observability import create_tracer_provider
 from InlineAgent import AgentAppConfig
+from InlineAgent.observability import (
+    ObservabilityConfig,
+    create_tracer_provider,
+    observe,
+)
 
 observe_config = ObservabilityConfig()
 agent_config = AgentAppConfig()
 
 create_tracer_provider(config=observe_config, timeout=300)
+
 
 @observe(show_traces=True, save_traces=False)
 def invoke_bedrock_agent(inputText: str, sessionId: str, **kwargs):
@@ -30,7 +35,6 @@ def invoke_bedrock_agent(inputText: str, sessionId: str, **kwargs):
 
 
 if __name__ == "__main__":
-
     user_id = "multiagent-test"
 
     question = "<user-question>"
