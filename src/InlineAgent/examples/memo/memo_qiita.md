@@ -9,3 +9,10 @@
   - https://github.com/ren8k/amazon-bedrock-agent-samples/blob/e82882ee0f8070a9c60a10a3c480e0f4242c869b/src/InlineAgent/src/InlineAgent/action_group/action_group.py#L275
 - Return Control により返却されたツールは以下で実行される．
   - https://github.com/ren8k/amazon-bedrock-agent-samples/blob/e82882ee0f8070a9c60a10a3c480e0f4242c869b/src/InlineAgent/src/InlineAgent/agent/process_roc.py#L94
+  - 加え，Tool の実行は以下で行っている．
+    - [本ステート](https://github.com/ren8k/amazon-bedrock-agent-samples/blob/515712c1b525f1d4fe40c67df06ea4234a09acee/src/InlineAgent/examples/delete_mcp_manual.py#L61)で，`MCPStdio.create`を実行する
+    - すると，[本ステート](https://github.com/ren8k/amazon-bedrock-agent-samples/blob/9ad5be807191afdaf19d70830448f67dbb971db8/src/InlineAgent/src/InlineAgent/tools/mcp.py#L215)が実行される
+    - すると，`await self.session.call_tool`を実行する関数`create_callable`がセットされる．
+      - https://github.com/ren8k/amazon-bedrock-agent-samples/blob/9ad5be807191afdaf19d70830448f67dbb971db8/src/InlineAgent/src/InlineAgent/tools/mcp.py#L107
+    - すると，以下で実行されるツールが選択される
+      - https://github.com/ren8k/amazon-bedrock-agent-samples/blob/e82882ee0f8070a9c60a10a3c480e0f4242c869b/src/InlineAgent/src/InlineAgent/agent/process_roc.py#L75
