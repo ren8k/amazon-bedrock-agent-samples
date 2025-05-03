@@ -12,7 +12,7 @@ server_params = StdioServerParameters(
 )
 
 
-async def main():
+async def main() -> None:
     # Step 2: Create MCP Client
     time_mcp_client = await MCPStdio.create(server_params=server_params)
 
